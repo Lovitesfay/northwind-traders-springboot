@@ -30,6 +30,17 @@ public class ProductController {
     }
 
 
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Product> createProduct(@PathVariable int id, @RequestBody Product product) {
+        try {
+            Product updatedProduct = productService.updateProduct(id, product);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (Exception e) {
+            if (e.getMessage().equals("Product not found")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().build();
+        }
     }
-
-
+}
