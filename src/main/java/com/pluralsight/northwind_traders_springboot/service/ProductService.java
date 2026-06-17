@@ -1,16 +1,22 @@
 package com.pluralsight.northwind_traders_springboot.service;
 
+import com.pluralsight.northwind_traders_springboot.model.Category;
 import com.pluralsight.northwind_traders_springboot.model.Product;
+import com.pluralsight.northwind_traders_springboot.model.Supplier;
 import com.pluralsight.northwind_traders_springboot.repository.CategoryRepository;
 import com.pluralsight.northwind_traders_springboot.repository.ProductRepository;
 import com.pluralsight.northwind_traders_springboot.repository.SupplierRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProductService {
 
     ProductRepository productRepository;
+    CategoryRepository categoryRepository;
+    SupplierRepository supplierRepository;
 
 
     public ProductService(ProductRepository productRepository) {
@@ -26,23 +32,6 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    ProductRepository productRepository;
-    CategoryRepository categoryRepository;
-    SupplierRepository supplierRepository;
-
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, SupplierRepository supplierRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.supplierRepository = supplierRepository;
-    }
-
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
-    }
-
-    public Optional<Product> getProductById(int id) {
-        return productRepository.findById(id);
-    }
 
     public Product createProduct(Product product) {
 
@@ -52,7 +41,7 @@ public class ProductService {
         if (product.getCategory() != null) {
 
             //get the category id that was sent in the request
-            int categoryId = product.getCategory().getCategoryId();
+            int categoryId = product.getCategory().getCategoryid();
 
             //try to find the category, throw an exception if we cant find it
             Category category = categoryRepository.findById(categoryId)
@@ -83,7 +72,7 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (updatedProduct.getCategory() != null) {
-            int categoryId = updatedProduct.getCategory().getCategoryId();
+            int categoryId = updatedProduct.getCategory().getCategoryid();
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             existingProduct.setCategory(category);
